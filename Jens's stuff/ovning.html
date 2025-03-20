@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Button</title>
+    <style>
+        body {
+            display: grid;
+            place-items: center;
+            height: 100vh;
+        }
+
+        button {
+            font-family: sans-serif;
+            font-size: 2rem;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <button id="clickerButton" type="button">DON'T CLICK THIS</button>
+    <p id="clicks">You clicked the button 0 times</p>
+    <script>
+        if (localStorage.clickcount) {
+            localStorage.click = Number(localStorage.click) + 1;
+        } else {
+            localStorage.click = 1;
+            };
+        
+        let click = localStorage.setItem("clickCount", localStorage.click)
+        
+        const button = document.querySelector("#clickerButton");
+        const counter = document.querySelector("#clicks");
+
+        button.addEventListener("click", (event) => {
+            button.textContent = "You clicked me..."
+            localStorage.click = Number(localStorage.click) + 1
+            counter.textContent = `You clicked the button ${localStorage.click - 1} times`
+        });
+    </script>
+</body>
+</html>
