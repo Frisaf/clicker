@@ -1,19 +1,31 @@
 let clicks = 0;
+let money = 0;
+let moneyPerClick = 1;
+let moneyPerSecond = 0;
+let acquiredUpgrades = 0;
+let last = 0;
+let numberOfClicks = 0;
+let active = false;
+
 const coin = document.querySelector("#coin");
 const moneyTracker = document.querySelector("#money");
+const mpsTracker = document.querySelector('#mps');
+const mpcTracker = document.querySelector('#mpc');
+const upgradesTracker = document.querySelector('#upgrades');
+const upgradeList = document.querySelector('#upgradeList');
 
 coin.addEventListener("click", (event) => {
     clicks += 1;
-    moneyTracker.textContent = "$" + clicks;
+    // moneyTracker.textContent = "$" + clicks;
 });
 
 function step(timestamp) {
-    moneyTracker.textContent = Math.round(money);
-    mpsTracker.textContent = moneyPerSecond;
-    mpcTracker.textContent = moneyPerClick;
-    upgradesTracker.textContent = acquiredUpgrades;
+    moneyTracker.textContent = `$${Math.round(clicks)}`;
+    mpsTracker.textContent = `Money per second: ${moneyPerSecond}`;
+    mpcTracker.textContent = `Money per click: ${moneyPerClick}`;
+    // upgradesTracker.textContent = acquiredUpgrades;
 
-    if (timestamp >= last + 1000) {
+    if (timestamp >= last + 10000) {
         money += moneyPerSecond;
         last = timestamp;
     }
@@ -23,27 +35,27 @@ function step(timestamp) {
         active = true;
     }
     
-    achievements = achievements.filter((achievement) => {
-        if (achievement.acquired) {
-            return false;
-        }
-        if (
-            achievement.requiredUpgrades &&
-            acquiredUpgrades >= achievement.requiredUpgrades
-        ) {
-            achievement.acquired = true;
-            message(achievement.description, 'achievement');
-            return false;
-        } else if (
-            achievement.requiredClicks &&
-            numberOfClicks >= achievement.requiredClicks
-        ) {
-            achievement.acquired = true;
-            message(achievement.description, 'achievement');
-            return false;
-        }
-        return true;
-    });
+    // achievements = achievements.filter((achievement) => {
+    //     if (achievement.acquired) {
+    //         return false;
+    //     }
+    //     if (
+    //         achievement.requiredUpgrades &&
+    //         acquiredUpgrades >= achievement.requiredUpgrades
+    //     ) {
+    //         achievement.acquired = true;
+    //         message(achievement.description, 'achievement');
+    //         return false;
+    //     } else if (
+    //         achievement.requiredClicks &&
+    //         numberOfClicks >= achievement.requiredClicks
+    //     ) {
+    //         achievement.acquired = true;
+    //         message(achievement.description, 'achievement');
+    //         return false;
+    //     }
+    //     return true;
+    // });
 
     window.requestAnimationFrame(step);
 }
@@ -59,7 +71,7 @@ upgrades = [
     {
         name: "Coin Upgrade",
         cost: 10,
-        amount: 1,
+        clicks: 1,
         description: "The coin generates more money the more you click on it.",
     },
     {
@@ -84,16 +96,26 @@ upgrades = [
 
 function createCard(upgrade) {
     const card = document.createElement('div');
+    const upgradeCost = document.querySelector("#cost")
+    const upgradeText = document.querySelector("#upgradeText") // HERE
+
     card.classList.add('card');
+
     const header = document.createElement('p');
     header.classList.add('title');
+
     const cost = document.createElement('p');
+    cost.classList.add("cost")
+
+    const description = document.createElement("p")
+    description.classList.add("descriptionText")
     if (upgrade.amount) {
-        header.textContent = `${upgrade.name}, +${upgrade.amount} per sekund.`;
+        header.textContent = `${upgrade.name}, +${upgrade.amount} per second.`;
     } else {
-        header.textContent = `${upgrade.name}, +${upgrade.clicks} per klick.`;
+        header.textContent = `${upgrade.name}, +${upgrade.clicks} per click.`;
     }
-    cost.textContent = `Köp för ${upgrade.cost} benbitar.`;
+    description.textContent = upgrade.description
+    cost.textContent = `$${upgrade.cost}`;
 
     card.addEventListener('click', (e) => {
         if (money >= upgrade.cost) {
@@ -109,7 +131,12 @@ function createCard(upgrade) {
         }
     });
 
-    card.appendChild(header);
-    card.appendChild(cost);
+    // card.appendChild(header);
+    // card.appendChild(description)
+    upgradeText.appendChild(header)
+    upgradeText.appendChild(description)
+    card.appendChild(upgradeText)
+    
+    card.appendChild(upgradeCost.appendChild(cost));
     return card;
 }

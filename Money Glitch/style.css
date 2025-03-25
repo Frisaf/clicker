@@ -29,4 +29,26 @@ nav {
 .upgradeContainer {
     background-color: #1E1E1E;
     width: 100%;
+    padding-left: 50px;
+}
+
+.cost {
+    background-color: #998F31;
+}
+
+.card {
+    color: white;
+    background-color: #5A573D;
+    max-width: 90%;
+    padding: 10px;
+    padding-left: 50px;
+    margin-top: 13px;
+    margin-bottom: 13px;
+    font-size: 1rem;
+    border-radius: 100px;
+    display: flex
+}
+
+#mps, #mpc {
+    font-size: 1rem;
 }
