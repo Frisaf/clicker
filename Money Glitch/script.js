@@ -13,10 +13,10 @@ const mpsTracker = document.querySelector('#mps');
 const mpcTracker = document.querySelector('#mpc');
 const upgradesTracker = document.querySelector('#upgrades');
 const upgradeList = document.querySelector('#upgradeList');
+const msgbox = document.querySelector('#msgbox');
 
 coin.addEventListener("click", (event) => {
-    clicks += 1;
-    // moneyTracker.textContent = "$" + clicks;
+    clicks += moneyPerClick;
 });
 
 function step(timestamp) {
@@ -25,15 +25,15 @@ function step(timestamp) {
     mpcTracker.textContent = `Money per click: ${moneyPerClick}`;
     // upgradesTracker.textContent = acquiredUpgrades;
 
-    if (timestamp >= last + 10000) {
-        money += moneyPerSecond;
+    if (timestamp >= last + 1000) {
+        clicks += moneyPerSecond;
         last = timestamp;
-    }
+    };
 
     if (moneyPerSecond > 0 && !active) {
         mpsTracker.classList.add('active');
         active = true;
-    }
+    };
     
     // achievements = achievements.filter((achievement) => {
     //     if (achievement.acquired) {
@@ -73,33 +73,39 @@ upgrades = [
         cost: 10,
         clicks: 1,
         description: "The coin generates more money the more you click on it.",
+        bought: 0,
     },
     {
         name: "Shares",
         cost: 50,
-        clicks: 2,
+        amount: 10,
         description: "Every ten seconds you can either win or lose money (50% chance of either winning or losing). The amount of money you lose depends on how many of this upgrade you have bought.",
+        bought: 0,
     },
     {
         name: "Bank Funds",
         cost: 100,
         amount: 10,
-        description: "Like shares, but more expensive and safer. Every ten seconds there is a 75% chance you will go into profit and a 25% chance you will lose money."
+        description: "Like shares, but more expensive and safer. Every ten seconds there is a 75% chance you will go into profit and a 25% chance you will lose money.",
+        bought: 0,
     },
     {
         name: "Start a Company",
         cost: 1000,
         amount: 100,
-        description: "Create a business, sell stuff, make money!"
+        description: "Create a business, sell stuff, make money!",
+        bought: 0,
     },
 ];
 
 function createCard(upgrade) {
     const card = document.createElement('div');
-    const upgradeCost = document.querySelector("#cost")
-    const upgradeText = document.querySelector("#upgradeText") // HERE
+    const upgradeCost = document.createElement("div")
+    const upgradeText = document.createElement("div")
 
     card.classList.add('card');
+    upgradeCost.classList.add("cost")
+    upgradeText.classList.add("upgradeText")
 
     const header = document.createElement('p');
     header.classList.add('title');
@@ -118,25 +124,51 @@ function createCard(upgrade) {
     cost.textContent = `$${upgrade.cost}`;
 
     card.addEventListener('click', (e) => {
-        if (money >= upgrade.cost) {
+        if (clicks >= upgrade.cost) {
             acquiredUpgrades++;
-            money -= upgrade.cost;
+            clicks -= upgrade.cost;
             upgrade.cost *= 1.5;
-            cost.textContent = 'Köp för ' + upgrade.cost + ' benbitar';
+            cost.textContent = `$${upgrade.cost}`;
             moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
             moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
-            message('Grattis du har köpt en uppgradering!', 'success');
+
+
+            console.log(upgrade.name)
+            // upgrades.forEach((upgrade) => {
+            //     if (upgrades[0] in ["Shares", "Bank Funds"]) {
+            //         console.log("hey")
+            //     }
+            // })
+
+            message("You bought an upgrade", 'success');
+            upgrade.bought += 1
         } else {
-            message('Du har inte råd.', 'warning');
+            message("You don't have enough money", 'warning');
         }
     });
 
-    // card.appendChild(header);
-    // card.appendChild(description)
     upgradeText.appendChild(header)
     upgradeText.appendChild(description)
     card.appendChild(upgradeText)
     
     card.appendChild(upgradeCost.appendChild(cost));
     return card;
+}
+
+function message(text, type) {
+    const p = document.createElement('p');
+    p.classList.add(type);
+    p.textContent = text;
+    msgbox.appendChild(p);
+    document.getElementById("msgbox").style.display = "block"
+    
+    if (type === 'success') {
+        document.getElementById("msgbox").style.backgroundColor = "#4abf37"
+    } else if(type === "warning") {
+        document.getElementById("msgbox").style.backgroundColor = "#c24040"
+    }
+    
+    setTimeout(() => {
+        p.parentNode.removeChild(p);
+    }, 2000);
 }
