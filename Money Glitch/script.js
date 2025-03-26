@@ -116,9 +116,9 @@ function createCard(upgrade) {
     const description = document.createElement("p")
     description.classList.add("descriptionText")
     if (upgrade.amount) {
-        header.textContent = `${upgrade.name}, +${upgrade.amount} per second.`;
+        header.textContent = `${upgrade.name}`;
     } else {
-        header.textContent = `${upgrade.name}, +${upgrade.clicks} per click.`;
+        header.textContent = `${upgrade.name}`;
     }
     description.textContent = upgrade.description
     cost.textContent = `$${upgrade.cost}`;
@@ -129,16 +129,28 @@ function createCard(upgrade) {
             clicks -= upgrade.cost;
             upgrade.cost *= 1.5;
             cost.textContent = `$${upgrade.cost}`;
-            moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
-            moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
 
+            if (upgrade.name === "Shares") {
+                x = Math.random()
+                
+                if (x >= 0.5) {
+                    clicks += 5 * upgrade.bought
+                } else {
+                    clicks -= 5 * upgrade.bought
+                }
 
-            console.log(upgrade.name)
-            // upgrades.forEach((upgrade) => {
-            //     if (upgrades[0] in ["Shares", "Bank Funds"]) {
-            //         console.log("hey")
-            //     }
-            // })
+            } else if (upgrade.name === "Bank Funds") {
+                x = Math.random()
+
+                if (x >= 0.25) {
+                    clicks += 5 * upgrade.bought
+                } else {
+                    clicks -= 5 * upgrade.bought
+                }
+            } else {
+                moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
+                moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
+            }
 
             message("You bought an upgrade", 'success');
             upgrade.bought += 1
@@ -148,6 +160,7 @@ function createCard(upgrade) {
     });
 
     upgradeText.appendChild(header)
+    upgradeText.appendChild(document.createElement("hr"))
     upgradeText.appendChild(description)
     card.appendChild(upgradeText)
     
