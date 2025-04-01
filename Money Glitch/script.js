@@ -3,7 +3,8 @@ let money = 0;
 let moneyPerClick = 1;
 let moneyPerSecond = 0;
 let acquiredUpgrades = 0;
-let last = 0;
+let last_one = 0;
+let last_ten = 0;
 let numberOfClicks = 0;
 let active = false;
 
@@ -15,6 +16,8 @@ const upgradesTracker = document.querySelector('#upgrades');
 const upgradeList = document.querySelector('#upgradeList');
 const msgbox = document.querySelector('#msgbox');
 
+const gambling = document.querySelector("#gambling_input")
+
 coin.addEventListener("click", (event) => {
     clicks += moneyPerClick;
 });
@@ -25,9 +28,41 @@ function step(timestamp) {
     mpcTracker.textContent = `Money per click: ${moneyPerClick}`;
     // upgradesTracker.textContent = acquiredUpgrades;
 
-    if (timestamp >= last + 1000) {
+    if (timestamp >= last_ten + 10000) {
+        upgrades.forEach((upgrade) => {
+            if (upgrade.name === "Shares") {
+                x = Math.random();
+
+                if (clicks < 5 * upgrade.bought) {
+                    
+                } else {
+                    if (x >= 0.5) {
+                        clicks += 5 * upgrade.bought;
+                    } else {
+                        clicks -= 5 * upgrade.bought;
+                    }
+                }
+            };
+
+            if (upgrade.name === "Bank Funds") {
+                x = Math.random();
+
+                if (clicks < upgrade.bought) {
+
+                } else {
+                    if (x > 0.25) {
+                        clicks += 5 * upgrade.bought;
+                    } else {
+                        clicks -= 5 * upgrade.bought;
+                    };
+                }
+            };
+            
+        last_ten = timestamp;
+        })
+    } else if (timestamp >= last_one + 1000) {
         clicks += moneyPerSecond;
-        last = timestamp;
+        last_one = timestamp;
     };
 
     if (moneyPerSecond > 0 && !active) {
@@ -78,14 +113,14 @@ upgrades = [
     {
         name: "Shares",
         cost: 50,
-        amount: 10,
+        amount: 0,
         description: "Every ten seconds you can either win or lose money (50% chance of either winning or losing). The amount of money you lose depends on how many of this upgrade you have bought.",
         bought: 0,
     },
     {
         name: "Bank Funds",
         cost: 100,
-        amount: 10,
+        amount: 0,
         description: "Like shares, but more expensive and safer. Every ten seconds there is a 75% chance you will go into profit and a 25% chance you will lose money.",
         bought: 0,
     },
@@ -128,31 +163,14 @@ function createCard(upgrade) {
             acquiredUpgrades++;
             clicks -= upgrade.cost;
             upgrade.cost *= 1.5;
+            upgrade.cost = Math.round(upgrade.cost)
             cost.textContent = `$${upgrade.cost}`;
 
-            if (upgrade.name === "Shares") {
-                x = Math.random()
-                
-                if (x >= 0.5) {
-                    clicks += 5 * upgrade.bought
-                } else {
-                    clicks -= 5 * upgrade.bought
-                }
-
-            } else if (upgrade.name === "Bank Funds") {
-                x = Math.random()
-
-                if (x >= 0.25) {
-                    clicks += 5 * upgrade.bought
-                } else {
-                    clicks -= 5 * upgrade.bought
-                }
-            } else {
-                moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
-                moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
-            }
+            moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
+            moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
 
             message("You bought an upgrade", 'success');
+
             upgrade.bought += 1
         } else {
             message("You don't have enough money", 'warning');
@@ -185,3 +203,23 @@ function message(text, type) {
         p.parentNode.removeChild(p);
     }, 2000);
 }
+
+gambling.addEventListener("keydown", (event) => {
+    event.preventDefault()
+    if (event.keyCode === 13) {
+        insert = gambling.value
+        console.log(insert)
+
+        x = Math.random()
+        y = Math.random()
+
+        if (x > y) {
+            clicks += insert
+        } else {
+            clicks -= insert
+        }
+    }
+
+})
+
+

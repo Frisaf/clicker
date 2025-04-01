@@ -83,3 +83,19 @@ nav {
 hr {
     color: #998F31
 }
+
+.cost input {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-family: Quantico, sans-serif;
+    font-weight: bolder;
+}
+
+.gambling {
+    display: flex;
+    align-items: center;
+}
