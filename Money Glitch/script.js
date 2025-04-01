@@ -15,7 +15,6 @@ const mpcTracker = document.querySelector('#mpc');
 const upgradesTracker = document.querySelector('#upgrades');
 const upgradeList = document.querySelector('#upgradeList');
 const msgbox = document.querySelector('#msgbox');
-
 const gambling = document.querySelector("#gambling_input")
 
 coin.addEventListener("click", (event) => {
@@ -31,7 +30,7 @@ function step(timestamp) {
     if (timestamp >= last_ten + 10000) {
         upgrades.forEach((upgrade) => {
             if (upgrade.name === "Shares") {
-                x = Math.random();
+                let x = Math.random();
 
                 if (clicks < 5 * upgrade.bought) {
                     
@@ -40,8 +39,8 @@ function step(timestamp) {
                         clicks += 5 * upgrade.bought;
                     } else {
                         clicks -= 5 * upgrade.bought;
-                    }
-                }
+                    };
+                };
             };
 
             if (upgrade.name === "Bank Funds") {
@@ -205,21 +204,17 @@ function message(text, type) {
 }
 
 gambling.addEventListener("keydown", (event) => {
-    event.preventDefault()
     if (event.keyCode === 13) {
-        insert = gambling.value
+        let insert = Math.round(parseFloat(gambling.value))
         console.log(insert)
 
-        x = Math.random()
-        y = Math.random()
+        let a = Math.random()
+        let b = Math.random()
 
-        if (x > y) {
+        if (a > b) {
             clicks += insert
         } else {
             clicks -= insert
-        }
-    }
-
-})
-
-
+        };
+    };
+});
