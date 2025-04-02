@@ -18,8 +18,6 @@ nav {
 }
 
 .clickContainer {
-    width: 25%;
-    height: 100%;
     padding: 20px;
     background-color: #998F31;
     color: white;
@@ -55,6 +53,7 @@ nav {
     border-radius: 100px;
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
 }
 
 #mps, #mpc {
@@ -84,7 +83,7 @@ hr {
     color: #998F31
 }
 
-#gambling_input {
+#gamblingInput, #charityInput {
     width: 50px;
     height: 50px;
     font-size: 1.5rem;
@@ -95,7 +94,31 @@ hr {
     font-weight: bolder;
 }
 
-.gambling {
+.gambling, .charity {
     display: flex;
     align-items: center;
+}
+
+#coin {
+    cursor: pointer;
+}
+
+.achievements {
+    padding: 10px;
+    background-color: rgb(21, 21, 21);
+    color: white;
+    font-size: 1rem;
+    height: 100%;
+}
+
+.unlockedAchievement {
+    border-width: 5px;
+    border-color: white;
+    padding: 3px;
+    margin-bottom: 2px;
+}
+
+.leftTab {
+    display: flex;
+    flex-direction: column;
 }

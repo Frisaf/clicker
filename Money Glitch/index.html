@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Clicker</title>
+    <title>Money Glitch</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -175,13 +175,19 @@
         <p>About</p>
     </nav>
     <main>
+      <div class="leftTab">
         <div class="clickContainer">
-            <h1>CLICK TO EARN MONEY!</h1>
-            <img src="media/Gold Coin.svg" width=60% id="coin">
-            <p id="money">$0</p>
-            <p id="mps">Money per second: 0</p>
-            <p id="mpc">Money per click: 0</p>
+          <h1>CLICK TO EARN MONEY!</h1>
+          <img src="media/Gold Coin.svg" width=60% id="coin">
+          <p id="money">$0</p>
+          <p id="mps">Money per second: 0</p>
+          <p id="mpc">Money per click: 0</p>
         </div>
+        <div class="achievements">
+          <h3>Unlocked Achievements</h3>
+          <div id="achievementsList"></div>
+        </div>
+      </div>
         <div class="upgradeContainer">
             <div id="upgradeList"></div>
             <div class="card">
@@ -192,7 +198,18 @@
               </div>
               <div class="cost gambling">
                 <p>$ </p>
-                <input id="gambling_input" placeholder="???">
+                <input id="gamblingInput" placeholder="???">
+              </div>
+            </div>
+            <div class="card">
+              <div class="upgradeText">
+                <p class="title">Charity</p>
+                <hr>
+                <p class="descriptionText">Donate an amount of your choice to charity. It won't make you any money, but it feels good.</p>
+              </div>
+              <div class="cost charity">
+                <p>$ </p>
+                <input id="charityInput" placeholder="???">
               </div>
             </div>
         </div>

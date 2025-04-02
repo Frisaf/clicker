@@ -15,7 +15,9 @@ const mpcTracker = document.querySelector('#mpc');
 const upgradesTracker = document.querySelector('#upgrades');
 const upgradeList = document.querySelector('#upgradeList');
 const msgbox = document.querySelector('#msgbox');
-const gambling = document.querySelector("#gambling_input")
+const gambling = document.querySelector("#gamblingInput")
+const charity = document.querySelector("#charityInput")
+const achievement_list = document.querySelector("#achievementsList")
 
 coin.addEventListener("click", (event) => {
     clicks += moneyPerClick;
@@ -69,27 +71,57 @@ function step(timestamp) {
         active = true;
     };
     
-    // achievements = achievements.filter((achievement) => {
-    //     if (achievement.acquired) {
-    //         return false;
-    //     }
-    //     if (
-    //         achievement.requiredUpgrades &&
-    //         acquiredUpgrades >= achievement.requiredUpgrades
-    //     ) {
-    //         achievement.acquired = true;
-    //         message(achievement.description, 'achievement');
-    //         return false;
-    //     } else if (
-    //         achievement.requiredClicks &&
-    //         numberOfClicks >= achievement.requiredClicks
-    //     ) {
-    //         achievement.acquired = true;
-    //         message(achievement.description, 'achievement');
-    //         return false;
-    //     }
-    //     return true;
-    // });
+    achievements = achievements.filter((achievement) => {
+        if (achievement.acquired) {
+            return false;
+        };
+
+        if (
+            achievement.requiredClicks &&
+            clicks >= achievement.requiredClicks
+        ) {
+            achievement.acquired = true;
+            message(achievement.name, 'achievement');
+            return false;
+        };
+
+        upgrades.forEach((upgrade) => {
+            if (upgrade.name === "Shares" && achievement.name === "To Wallstreet!" && upgrade.bought === 1) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true;
+                return false;
+            } else if (upgrade.name === "Bank Funds" && achievement.name === "Just To Be Safe" && upgrade.bought === 1) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true;
+                return false;
+            } else if (upgrade.name === "Start a Company" && achievement.name === "Small Business Owner" && upgrade.bought === 1) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true;
+                return false;
+            } else if (upgrade.name === "Start a Company" && achievement.name === "Capitalist" && upgrade.bought === 10) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true;
+                return false;
+            }
+        });
+
+        achievements.forEach((achievement) => {
+            if (achievement.acquired === true && achievement.displayed === false) {
+                const list_item = document.createElement("div")
+                const text = document.createElement("p")
+
+                list_item.classList.add("unlockedAchievement")
+                text.textContent = `${achievement.name} - ${achievement.description}`
+
+                list_item.appendChild(text)
+                achievement_list.appendChild(list_item)
+                achievement.displayed = true
+            }
+        })
+        
+
+        return true;
+    });
 
     window.requestAnimationFrame(step);
 }
@@ -101,7 +133,7 @@ window.addEventListener('load', (event) => {
     window.requestAnimationFrame(step);
 });
 
-upgrades = [
+let upgrades = [
     {
         name: "Coin Upgrade",
         cost: 10,
@@ -129,6 +161,113 @@ upgrades = [
         amount: 100,
         description: "Create a business, sell stuff, make money!",
         bought: 0,
+    },
+];
+
+let achievements = [
+    {
+        name: "Genieus...",
+        requiredClicks: 10,
+        acquired: false,
+        description: "Earn $10",
+        displayed: false,
+    },
+    {
+        name: "Infinite Money Glitch",
+        requiredClicks: 100,
+        acquired: false,
+        description: "Earn $100",
+        displayed: false,
+    },
+    {
+        name: "Money, money money",
+        requiredClicks: 1000,
+        acquired: false,
+        description: "Earn $1000",
+        displayed: false,
+    },
+    {
+        name: "Rich bitch",
+        requiredClicks: 10000,
+        acquired: false,
+        description: "Earn $10 000",
+        displayed: false,
+    },
+    {
+        name: "The Ultimate Capitalist",
+        requiredClicks: 100000,
+        acquired: false,
+        description: "Earn $100 000",
+        displayed: false,
+    },
+    {
+        name: "Tax Evader?",
+        requiredClicks: 1000000,
+        acquired: false,
+        description: "Earn $1 000 000",
+        displayed: false,
+    },
+    {
+        name: "Tricking The System",
+        requiredClicks: 10000000,
+        acquired: false,
+        description: "Earn $10 000 000",
+        displayed: false,
+    },
+    {
+        name: "Candy rain? No, money rain",
+        requiredClicks: 100000000,
+        acquired: false,
+        description: "Earn $100 000 000",
+        displayed: false,
+    },
+    {
+        name: "All In",
+        acquired: false,
+        description: "Gamble for the first time",
+        displayed: false,
+    },
+    {
+        name: "Small Business Owner",
+        acquired: false,
+        description: "Start your first company",
+        displayed: false,
+    },
+    {
+        name: "Capitalist",
+        acquired: false,
+        description: "Start your 10th company",
+        displayed: false,
+    },
+    {
+        name: "Law-Abiding Citizen",
+        acquired: false,
+        description: "Pay your taxes for the first time",
+        displayed: false,
+    },
+    {
+        name: "A Rare Billionaire",
+        acquired: false,
+        description: "Donates money to charity for the first time",
+        displayed: false,
+    },
+    {
+        name: "A Heart Made of Gold",
+        acquired: false,
+        description: "Donate $1000 or more for the first time",
+        displayed: false,
+    },
+    {
+        name: "To Wallstreet!",
+        acquired: false,
+        description: "Buy your first share",
+        displayed: false,
+    },
+    {
+        name: "Just To Be Safe",
+        acquired: false,
+        description: "Buy your first bank fund",
+        displayed: false,
     },
 ];
 
@@ -196,7 +335,9 @@ function message(text, type) {
         document.getElementById("msgbox").style.backgroundColor = "#4abf37"
     } else if(type === "warning") {
         document.getElementById("msgbox").style.backgroundColor = "#c24040"
-    }
+    } else if(type === "achievement") {
+        document.getElementById("msgbox").style.backgroundColor = "#1268f3"
+    };
     
     setTimeout(() => {
         p.parentNode.removeChild(p);
@@ -206,13 +347,29 @@ function message(text, type) {
 gambling.addEventListener("keydown", (event) => {
     if (event.keyCode === 13) {
         let insert = Math.round(parseFloat(gambling.value))
-        console.log(insert)
-
         let a = Math.random()
         let b = Math.random()
 
-        if (a > b) {
-            clicks += insert
+        if (insert < 10) {
+            message("Your bet needs to be $10 or more", "warning")
+        } else if (insert > 1000) {
+            message("Your bet can't exceed $1000")
+        } else {
+            if (a > b) {
+                clicks += insert
+            } else {
+                clicks -= insert
+            };
+        };
+    };
+});
+
+charity.addEventListener("keydown", (event) => {
+    if (event.keyCode === 13) { 
+        let insert = Math.round(parseFloat(gambling.value))
+        
+        if (insert > clicks) {
+            message("You don't have enough money", "warning")
         } else {
             clicks -= insert
         };
