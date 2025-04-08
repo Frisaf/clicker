@@ -7,6 +7,9 @@ let last_one = 0;
 let last_ten = 0;
 let numberOfClicks = 0;
 let active = false;
+let times_gambled = 0;
+let times_donated = 0;
+let last_donation = 0;
 
 const coin = document.querySelector("#coin");
 const moneyTracker = document.querySelector("#money");
@@ -15,9 +18,9 @@ const mpcTracker = document.querySelector('#mpc');
 const upgradesTracker = document.querySelector('#upgrades');
 const upgradeList = document.querySelector('#upgradeList');
 const msgbox = document.querySelector('#msgbox');
-const gambling = document.querySelector("#gamblingInput")
-const charity = document.querySelector("#charityInput")
-const achievement_list = document.querySelector("#achievementsList")
+const gambling = document.querySelector("#gamblingInput");
+const charity = document.querySelector("#charityInput");
+const achievement_list = document.querySelector("#achievementsList");
 
 coin.addEventListener("click", (event) => {
     clicks += moneyPerClick;
@@ -102,6 +105,18 @@ function step(timestamp) {
                 message(achievement.name, "achievement");
                 achievement.acquired = true;
                 return false;
+            } else if (achievement.name === "All In" && times_gambled === 1 && achievement.acquired === false) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true;
+                return false
+            } else if (achievement.name === "A Rare Billionaire" && times_donated === 1 && achievement.acquired === false) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true;
+                return false
+            } else if (achievement.name === "A Heart Made of Gold" && last_donation === 1000 && achievement.acquired === false) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true
+                return false
             }
         });
 
@@ -118,8 +133,6 @@ function step(timestamp) {
                 achievement.displayed = true
             }
         })
-        
-
         return true;
     });
 
@@ -222,6 +235,13 @@ let achievements = [
         displayed: false,
     },
     {
+        name: "Scrooge McDuck",
+        requiredClicks: 1000000000,
+        acquired: false,
+        description: "Earn $1 000 000 000",
+        displayed: false,
+    },
+    {
         name: "All In",
         acquired: false,
         description: "Gamble for the first time",
@@ -248,7 +268,7 @@ let achievements = [
     {
         name: "A Rare Billionaire",
         acquired: false,
-        description: "Donates money to charity for the first time",
+        description: "Donate money to charity for the first time",
         displayed: false,
     },
     {
@@ -329,15 +349,7 @@ function message(text, type) {
     p.classList.add(type);
     p.textContent = text;
     msgbox.appendChild(p);
-    document.getElementById("msgbox").style.display = "block"
-    
-    if (type === 'success') {
-        document.getElementById("msgbox").style.backgroundColor = "#4abf37"
-    } else if(type === "warning") {
-        document.getElementById("msgbox").style.backgroundColor = "#c24040"
-    } else if(type === "achievement") {
-        document.getElementById("msgbox").style.backgroundColor = "#1268f3"
-    };
+    msgbox.style.display = "block"
     
     setTimeout(() => {
         p.parentNode.removeChild(p);
@@ -351,27 +363,30 @@ gambling.addEventListener("keydown", (event) => {
         let b = Math.random()
 
         if (insert < 10) {
-            message("Your bet needs to be $10 or more", "warning")
+            message("Your bet needs to be equal to or exceed $10", "warning");
         } else if (insert > 1000) {
-            message("Your bet can't exceed $1000")
+            message("Your bet can't exceed $1000", "warning");
         } else {
             if (a > b) {
-                clicks += insert
+                clicks += insert;
             } else {
-                clicks -= insert
+                clicks -= insert;
             };
+            times_gambled += 1;
         };
     };
 });
 
 charity.addEventListener("keydown", (event) => {
     if (event.keyCode === 13) { 
-        let insert = Math.round(parseFloat(gambling.value))
+        let insert = Math.round(parseFloat(gambling.value));
         
         if (insert > clicks) {
-            message("You don't have enough money", "warning")
+            message("You don't have enough money", "warning");
         } else {
-            clicks -= insert
+            clicks -= insert;
+            times_donated += 1;
+            last_donation = insert
         };
     };
 });

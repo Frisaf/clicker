@@ -65,13 +65,26 @@ nav {
     right: 2vmin;
     bottom: 2vmin;
     color: white;
-    background-color: black;
     display: none;
     min-width: 16rem;
 }
 
 #msgbox > p {
     margin-inline: 20px;
+    margin-bottom: 10px;
+    padding: 25px;
+}
+
+.success {
+    background-color: #4abf37;
+}
+
+.warning {
+    background-color: #c24040;
+}
+
+.achievement {
+    background-color: #1268f3;
 }
 
 .title {
@@ -121,4 +134,17 @@ hr {
 .leftTab {
     display: flex;
     flex-direction: column;
+}
+
+.about {
+    position: absolute;
+    top: 25%;
+    width: 80%;
+    left: 10%;
+    background-color: #e7d422;
+    padding: 20px;
+    border-width: 50px;
+    border-color: #998F31;
+    border-radius: 20px;
+    border: solid;
 }
