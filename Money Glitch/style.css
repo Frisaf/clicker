@@ -136,15 +136,62 @@ hr {
     flex-direction: column;
 }
 
-.about {
-    position: absolute;
+#about, #tax {
+    position: fixed;
     top: 25%;
     width: 80%;
     left: 10%;
     background-color: #e7d422;
     padding: 20px;
-    border-width: 50px;
-    border-color: #998F31;
     border-radius: 20px;
-    border: solid;
+    border: solid 5px #7a6e08;
+    flex-direction: column;
+    align-items: flex-end;
+    display: flex;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.567);
+}
+
+#tax {
+    text-align: center;
+    /* display: grid; */
+    justify-items: center;
+    display: none;
+}
+
+#pay {
+    border: solid 5px #7a6e08;
+    border-radius: 5px;
+    background-color: transparent;
+    width: fit-content;
+    font-size: 1.2rem;
+    padding: 20px;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#openAbout, #closeAbout {
+    cursor: pointer;
+}
+
+.endContainer {
+    background-color: antiquewhite;
+    margin-inline: auto;
+    width: 70%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.312);
+    padding: 2rem;
+    margin-top: 100px;
+}
+
+.endContainer h1 {
+    text-align: center;
+}
+
+.theEnd {
+    background-color: #b4be9d;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    justify-items: center;
 }

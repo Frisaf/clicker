@@ -10,6 +10,7 @@ let active = false;
 let times_gambled = 0;
 let times_donated = 0;
 let last_donation = 0;
+let taxes_paid = 0;
 
 const coin = document.querySelector("#coin");
 const moneyTracker = document.querySelector("#money");
@@ -21,6 +22,11 @@ const msgbox = document.querySelector('#msgbox');
 const gambling = document.querySelector("#gamblingInput");
 const charity = document.querySelector("#charityInput");
 const achievement_list = document.querySelector("#achievementsList");
+const close_about = document.querySelector("#closeAbout");
+const about = document.querySelector("#about");
+const open_about = document.querySelector("#openAbout");
+const tax = document.querySelector("#tax");
+const pay = document.querySelector("#pay");
 
 coin.addEventListener("click", (event) => {
     clicks += moneyPerClick;
@@ -31,6 +37,10 @@ function step(timestamp) {
     mpsTracker.textContent = `Money per second: ${moneyPerSecond}`;
     mpcTracker.textContent = `Money per click: ${moneyPerClick}`;
     // upgradesTracker.textContent = acquiredUpgrades;
+
+    if (clicks > 100000000000) {
+        window.location.href = "the_end.html"
+    }
 
     if (timestamp >= last_ten + 10000) {
         upgrades.forEach((upgrade) => {
@@ -59,11 +69,11 @@ function step(timestamp) {
                     } else {
                         clicks -= 5 * upgrade.bought;
                     };
-                }
+                };
             };
             
         last_ten = timestamp;
-        })
+        });
     } else if (timestamp >= last_one + 1000) {
         clicks += moneyPerSecond;
         last_one = timestamp;
@@ -108,31 +118,39 @@ function step(timestamp) {
             } else if (achievement.name === "All In" && times_gambled === 1 && achievement.acquired === false) {
                 message(achievement.name, "achievement");
                 achievement.acquired = true;
-                return false
+                return false;
             } else if (achievement.name === "A Rare Billionaire" && times_donated === 1 && achievement.acquired === false) {
                 message(achievement.name, "achievement");
                 achievement.acquired = true;
-                return false
+                return false;
             } else if (achievement.name === "A Heart Made of Gold" && last_donation === 1000 && achievement.acquired === false) {
                 message(achievement.name, "achievement");
-                achievement.acquired = true
-                return false
+                achievement.acquired = true;
+                return false;
+            } else if (achievement.name === "Law-Abiding Citizen" && taxes_paid === 1 && achievement.acquired === false) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true;
+                return false;
             }
         });
 
         achievements.forEach((achievement) => {
             if (achievement.acquired === true && achievement.displayed === false) {
-                const list_item = document.createElement("div")
-                const text = document.createElement("p")
+                const list_item = document.createElement("div");
+                const text = document.createElement("p");
 
-                list_item.classList.add("unlockedAchievement")
-                text.textContent = `${achievement.name} - ${achievement.description}`
+                list_item.classList.add("unlockedAchievement");
+                text.textContent = `${achievement.name} - ${achievement.description}`;
 
-                list_item.appendChild(text)
-                achievement_list.appendChild(list_item)
-                achievement.displayed = true
+                list_item.appendChild(text);
+                achievement_list.appendChild(list_item);
+                achievement.displayed = true;
+            };
+
+            if (achievement.acquired === true && achievement.type == "earn" && achievement.paid == false) {
+                tax.style.display = "grid";
             }
-        })
+        });
         return true;
     });
 
@@ -184,6 +202,8 @@ let achievements = [
         acquired: false,
         description: "Earn $10",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "Infinite Money Glitch",
@@ -191,6 +211,8 @@ let achievements = [
         acquired: false,
         description: "Earn $100",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "Money, money money",
@@ -198,6 +220,8 @@ let achievements = [
         acquired: false,
         description: "Earn $1000",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "Rich bitch",
@@ -205,6 +229,8 @@ let achievements = [
         acquired: false,
         description: "Earn $10 000",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "The Ultimate Capitalist",
@@ -212,6 +238,8 @@ let achievements = [
         acquired: false,
         description: "Earn $100 000",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "Tax Evader?",
@@ -219,6 +247,8 @@ let achievements = [
         acquired: false,
         description: "Earn $1 000 000",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "Tricking The System",
@@ -226,6 +256,8 @@ let achievements = [
         acquired: false,
         description: "Earn $10 000 000",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "Candy rain? No, money rain",
@@ -233,6 +265,8 @@ let achievements = [
         acquired: false,
         description: "Earn $100 000 000",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "Scrooge McDuck",
@@ -240,6 +274,8 @@ let achievements = [
         acquired: false,
         description: "Earn $1 000 000 000",
         displayed: false,
+        paid: false,
+        type: "earn"
     },
     {
         name: "All In",
@@ -386,7 +422,22 @@ charity.addEventListener("keydown", (event) => {
         } else {
             clicks -= insert;
             times_donated += 1;
-            last_donation = insert
+            last_donation = insert;
         };
     };
+});
+
+open_about.addEventListener("click", (event) => {
+    about.style.display = "flex";
+});
+
+close_about.addEventListener("click", (event) => {
+    about.style.display = "none";
+})
+
+pay.addEventListener("click", (event) => {
+    clicks -= clicks * 0.1;
+    tax.style.display = "none";
+    message("Tax paid!", "success");
+    taxes_paid += 1;
 });
