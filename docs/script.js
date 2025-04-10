@@ -405,8 +405,10 @@ gambling.addEventListener("keydown", (event) => {
         } else {
             if (a > b) {
                 clicks += insert;
+                message(`You won $${insert}!`, "success")
             } else {
                 clicks -= insert;
+                message(`You lost $${insert}`, "warning")
             };
             times_gambled += 1;
         };
@@ -415,7 +417,7 @@ gambling.addEventListener("keydown", (event) => {
 
 charity.addEventListener("keydown", (event) => {
     if (event.keyCode === 13) { 
-        let insert = Math.round(parseFloat(gambling.value));
+        let insert = Math.round(parseFloat(charity.value));
         
         if (insert > clicks) {
             message("You don't have enough money", "warning");
@@ -423,6 +425,7 @@ charity.addEventListener("keydown", (event) => {
             clicks -= insert;
             times_donated += 1;
             last_donation = insert;
+            message(`You donated $${insert} to charity!`, "success")
         };
     };
 });
@@ -438,6 +441,6 @@ close_about.addEventListener("click", (event) => {
 pay.addEventListener("click", (event) => {
     clicks -= clicks * 0.1;
     tax.style.display = "none";
-    message("Tax paid!", "success");
+    message("Taxes paid!", "success");
     taxes_paid += 1;
 });
