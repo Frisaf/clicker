@@ -77,6 +77,19 @@ function step(timestamp) {
     } else if (timestamp >= last_one + 1000) {
         clicks += moneyPerSecond;
         last_one = timestamp;
+
+        Array.from(upgradeList.children).forEach((card) => {
+            const upgradeName = card.getAttribute("data-name")
+            const upgrade = upgrades.find((u) => u.name === upgradeName);
+
+            if(upgrade) {
+                if(clicks < upgrade.cost) {
+                    card.classList.add("disable");
+                } else if(clicks >= upgrade.cost) {
+                    card.classList.remove("disable");
+                }
+            }
+        })
     };
 
     if (moneyPerSecond > 0 && !active) {
@@ -131,7 +144,7 @@ function step(timestamp) {
                 message(achievement.name, "achievement");
                 achievement.acquired = true;
                 return false;
-            }
+            };
         });
 
         achievements.forEach((achievement) => {
@@ -155,7 +168,7 @@ function step(timestamp) {
     });
 
     window.requestAnimationFrame(step);
-}
+};
 
 window.addEventListener('load', (event) => {
     upgrades.forEach((upgrade) => {
@@ -329,14 +342,16 @@ let achievements = [
 
 function createCard(upgrade) {
     const card = document.createElement('div');
-    const upgradeCost = document.createElement("div")
-    const upgradeText = document.createElement("div")
+    const upgradeCost = document.createElement("div");
+    const upgradeText = document.createElement("div");
+
+    card.setAttribute("data-name", upgrade.name);
 
     card.classList.add('card');
-    upgradeCost.classList.add("cost")
-    upgradeText.classList.add("upgradeText")
+    upgradeCost.classList.add("cost");
+    upgradeText.classList.add("upgradeText");
 
-    const header = document.createElement('p');
+    const header = document.createElement('h3');
     header.classList.add('title');
 
     const cost = document.createElement('p');
@@ -375,8 +390,8 @@ function createCard(upgrade) {
     upgradeText.appendChild(document.createElement("hr"))
     upgradeText.appendChild(description)
     card.appendChild(upgradeText)
-    
     card.appendChild(upgradeCost.appendChild(cost));
+
     return card;
 }
 

@@ -178,13 +178,13 @@
       <div class="leftTab">
         <div class="clickContainer">
           <h1>CLICK TO EARN MONEY!</h1>
-          <img src="media/Gold Coin.svg" width=60% id="coin">
+          <img src="media/GoldCoin.svg" width="250" id="coin" alt="A gold coin with stars around the entire edge.">
           <p id="money">$0</p>
           <p id="mps">Money per second: 0</p>
           <p id="mpc">Money per click: 0</p>
         </div>
         <div class="achievements">
-          <h3>Unlocked Achievements</h3>
+          <h2>Unlocked Achievements</h2>
           <div id="achievementsList"></div>
         </div>
       </div>
@@ -192,24 +192,28 @@
             <div id="upgradeList"></div>
             <div class="card">
               <div class="upgradeText">
-                <p class="title">Gambling</p>
+                <h3 class="title">Gambling</h3>
                 <hr>
                 <p class="descriptionText">Go to the casino and win big (or leave poorer). Enter an amount of money in the box and press ENTER to gamble!</p>
               </div>
-              <div class="cost gambling">
-                <p>$ </p>
-                <input id="gamblingInput" placeholder="???">
+              <div>
+                <div class="cost gambling">
+                  <label for="gamblingInput">$</label>
+                  <input id="gamblingInput" placeholder="???">
+                </div>
               </div>
             </div>
             <div class="card">
               <div class="upgradeText">
-                <p class="title">Charity</p>
+                <h3 class="title">Charity</h3>
                 <hr>
                 <p class="descriptionText">Donate an amount of your choice to charity. It won't make you any money, but it feels good.</p>
               </div>
-              <div class="cost charity">
-                <p>$ </p>
-                <input id="charityInput" placeholder="???">
+              <div class="charityContainer">
+                <div class="cost charity">
+                  <label for="charityInput">$</label>
+                  <input id="charityInput" placeholder="???">
+                </div>
               </div>
             </div>
         </div>

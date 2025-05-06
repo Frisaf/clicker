@@ -56,8 +56,13 @@ nav {
     cursor: pointer;
 }
 
+#money {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
 #mps, #mpc {
-    font-size: 1rem;
+    font-size: 1.8rem;
 }
 
 #msgbox {
@@ -110,6 +115,15 @@ hr {
 .gambling, .charity {
     display: flex;
     align-items: center;
+}
+
+.charityContainer, .gamblingContainer {
+    display: grid;
+    align-content: center;
+}
+
+.disable {
+    opacity: 50%;
 }
 
 #coin {
