@@ -27,16 +27,36 @@ const about = document.querySelector("#about");
 const open_about = document.querySelector("#openAbout");
 const tax = document.querySelector("#tax");
 const pay = document.querySelector("#pay");
+const gambling_card = document.querySelector("#gamblingCard")
+const charity_card = document.querySelector("#charityCard")
 
 coin.addEventListener("click", (event) => {
     clicks += moneyPerClick;
+    coin.classList.add("pressed");
+
+    setTimeout(() => {
+        coin.classList.remove("pressed");
+    }, 100);
 });
 
 function step(timestamp) {
     moneyTracker.textContent = `$${Math.round(clicks)}`;
     mpsTracker.textContent = `Money per second: ${moneyPerSecond}`;
     mpcTracker.textContent = `Money per click: ${moneyPerClick}`;
-    // upgradesTracker.textContent = acquiredUpgrades;
+
+    if (clicks <= 0) {
+        gambling_card.classList.add("disable");
+        charity_card.classList.add("disable");
+
+        gambling.disabled = true
+        charity.disabled = true
+    } else {
+        gambling_card.classList.remove("disable");
+        charity_card.classList.remove("disable");
+
+        gambling.disabled = false
+        charity.disabled = false
+    }
 
     if (clicks > 100000000000) {
         window.location.href = "the_end.html"
@@ -82,8 +102,8 @@ function step(timestamp) {
             const upgradeName = card.getAttribute("data-name")
             const upgrade = upgrades.find((u) => u.name === upgradeName);
 
-            if(upgrade) {
-                if(clicks < upgrade.cost) {
+            if (upgrade) {
+                if (clicks < upgrade.cost) {
                     card.classList.add("disable");
                 } else if(clicks >= upgrade.cost) {
                     card.classList.remove("disable");
@@ -144,7 +164,11 @@ function step(timestamp) {
                 message(achievement.name, "achievement");
                 achievement.acquired = true;
                 return false;
-            };
+            } else if (achievement.name === "In Debt" && clicks < 0 && achievement.acquired === false) {
+                message(achievement.name, "achievement");
+                achievement.acquired = true;
+                return false;
+            }
         });
 
         achievements.forEach((achievement) => {
@@ -228,7 +252,7 @@ let achievements = [
         type: "earn"
     },
     {
-        name: "Money, money money",
+        name: "Money, money, money",
         requiredClicks: 1000,
         acquired: false,
         description: "Earn $1000",
@@ -338,6 +362,12 @@ let achievements = [
         description: "Buy your first bank fund",
         displayed: false,
     },
+    {
+        name: "In Debt",
+        acquired: false,
+        description: "Get less than $0",
+        displayed: false,
+    },
 ];
 
 function createCard(upgrade) {
@@ -417,6 +447,10 @@ gambling.addEventListener("keydown", (event) => {
             message("Your bet needs to be equal to or exceed $10", "warning");
         } else if (insert > 1000) {
             message("Your bet can't exceed $1000", "warning");
+        } else if (clicks < 0) {
+            message("The bank doesn't allow you to take more loans for gambling", "warning")
+        } else if (gambling.value === "") {
+            message("You need to provide a number", "warning")
         } else {
             if (a > b) {
                 clicks += insert;
@@ -426,6 +460,7 @@ gambling.addEventListener("keydown", (event) => {
                 message(`You lost $${insert}`, "warning")
             };
             times_gambled += 1;
+            gambling.value = ""
         };
     };
 });
@@ -436,11 +471,14 @@ charity.addEventListener("keydown", (event) => {
         
         if (insert > clicks) {
             message("You don't have enough money", "warning");
+        } else if (charity.value === "") {
+            message("You need to provide a number", "warning")
         } else {
             clicks -= insert;
             times_donated += 1;
             last_donation = insert;
             message(`You donated $${insert} to charity!`, "success")
+            charity.value = ""
         };
     };
 });
