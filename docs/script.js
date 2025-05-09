@@ -11,6 +11,7 @@ let times_gambled = 0;
 let times_donated = 0;
 let last_donation = 0;
 let taxes_paid = 0;
+let multiplier = 0;
 
 const coin = document.querySelector("#coin");
 const moneyTracker = document.querySelector("#money");
@@ -405,8 +406,12 @@ function createCard(upgrade) {
             upgrade.cost = Math.round(upgrade.cost)
             cost.textContent = `$${upgrade.cost}`;
 
+            if (upgrade.name === "Coin Upgrade") {
+                multiplier += 1
+            };
+
             moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
-            moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
+            moneyPerClick += upgrade.clicks ? upgrade.clicks * multiplier : 0;
 
             message("You bought an upgrade", 'success');
 
@@ -449,7 +454,7 @@ gambling.addEventListener("keydown", (event) => {
             message("Your bet can't exceed $1000", "warning");
         } else if (clicks < 0) {
             message("The bank doesn't allow you to take more loans for gambling", "warning")
-        } else if (gambling.value === "") {
+        } else if (gambling.value === "" || isNaN(gambling.value)) {
             message("You need to provide a number", "warning")
         } else {
             if (a > b) {
@@ -471,7 +476,7 @@ charity.addEventListener("keydown", (event) => {
         
         if (insert > clicks) {
             message("You don't have enough money", "warning");
-        } else if (charity.value === "") {
+        } else if (charity.value === "" || isNaN(gambling.value)) {
             message("You need to provide a number", "warning")
         } else {
             clicks -= insert;
