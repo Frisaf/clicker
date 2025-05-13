@@ -192,6 +192,10 @@ function step(timestamp) {
         return true;
     });
 
+    // localStorage.setItem("clicks", clicks)
+    // achievements = JSON.parse(achievements)
+    // localStorage.setItem("achievements", JSON.stringify(achievements))
+
     window.requestAnimationFrame(step);
 };
 
