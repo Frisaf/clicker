@@ -1,11 +1,9 @@
-let clicks = 0;
-let money = 0;
-let moneyPerClick = 1;
-let moneyPerSecond = 0;
+let clicks = parseFloat(localStorage.getItem("clicks")) || 0;
+let moneyPerClick = parseFloat(localStorage.getItem("moneyPerClick")) || 1;
+let moneyPerSecond = parseFloat(localStorage.getItem("moneyPerSecond")) || 0;
 let acquiredUpgrades = 0;
 let last_one = 0;
 let last_ten = 0;
-let numberOfClicks = 0;
 let active = false;
 let times_gambled = 0;
 let times_donated = 0;
@@ -30,6 +28,7 @@ const tax = document.querySelector("#tax");
 const pay = document.querySelector("#pay");
 const gambling_card = document.querySelector("#gamblingCard")
 const charity_card = document.querySelector("#charityCard")
+const reset_btn = document.querySelector("#resetbtn")
 
 coin.addEventListener("click", (event) => {
     clicks += moneyPerClick;
@@ -192,9 +191,11 @@ function step(timestamp) {
         return true;
     });
 
-    // localStorage.setItem("clicks", clicks)
-    // achievements = JSON.parse(achievements)
-    // localStorage.setItem("achievements", JSON.stringify(achievements))
+    localStorage.setItem("clicks", clicks);
+    localStorage.setItem("moneyPerClick", moneyPerClick);
+    localStorage.setItem("moneyPerSecond", moneyPerSecond);
+    localStorage.setItem("upgrades", JSON.stringify(upgrades));
+    localStorage.setItem("achievements", JSON.stringify(achievements))
 
     window.requestAnimationFrame(step);
 };
@@ -206,7 +207,7 @@ window.addEventListener('load', (event) => {
     window.requestAnimationFrame(step);
 });
 
-let upgrades = [
+let upgrades = JSON.parse(localStorage.getItem("upgrades")) || [
     {
         name: "Coin Upgrade",
         cost: 10,
@@ -237,7 +238,7 @@ let upgrades = [
     },
 ];
 
-let achievements = [
+let achievements = JSON.parse(localStorage.getItem("achievements")) || [
     {
         name: "Genieus...",
         requiredClicks: 10,
@@ -420,6 +421,8 @@ function createCard(upgrade) {
             message("You bought an upgrade", 'success');
 
             upgrade.bought += 1
+
+            localStorage.setItem("upgrades", JSON.stringify(upgrades))
         } else {
             message("You don't have enough money", 'warning');
         }
@@ -506,3 +509,15 @@ pay.addEventListener("click", (event) => {
     message("Taxes paid!", "success");
     taxes_paid += 1;
 });
+
+reset_btn.addEventListener("click", (event) => {
+    if (window.confirm("THIS ACTION IS IRREVERSIBLE! This will completely reset your progress and remove all your achievements, upgrades and your money. Are you sure you want to continue?")) {
+        window.cancelAnimationFrame(step)
+        localStorage.removeItem("clicks");
+        localStorage.removeItem("moneyPerClick");
+        localStorage.removeItem("moneyPerSecond");
+        localStorage.removeItem("upgrades");
+        localStorage.removeItem("achievements")
+        location.reload()
+    }
+})
