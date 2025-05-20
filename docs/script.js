@@ -10,6 +10,7 @@ let times_donated = 0;
 let last_donation = 0;
 let taxes_paid = 0;
 let multiplier = 0;
+let acquired_achievements = JSON.parse(localStorage.getItem("acquired_achievements")) || [];
 
 const coin = document.querySelector("#coin");
 const moneyTracker = document.querySelector("#money");
@@ -33,6 +34,7 @@ const reset_btn = document.querySelector("#resetbtn")
 coin.addEventListener("click", (event) => {
     clicks += moneyPerClick;
     coin.classList.add("pressed");
+    localStorage.setItem("clicks", clicks);
 
     setTimeout(() => {
         coin.classList.remove("pressed");
@@ -119,6 +121,11 @@ function step(timestamp) {
     
     achievements = achievements.filter((achievement) => {
         if (achievement.acquired) {
+            acquired_achievements.push({
+                name: achievement.name,
+                description: achievement.description,
+            })
+            localStorage.setItem("acquired_achievements", JSON.stringify(acquired_achievements));
             return false;
         };
 
@@ -128,6 +135,11 @@ function step(timestamp) {
         ) {
             achievement.acquired = true;
             message(achievement.name, 'achievement');
+            acquired_achievements.push({
+                name: achievement.name,
+                description: achievement.description,
+            }
+            )
             return false;
         };
 
@@ -182,20 +194,16 @@ function step(timestamp) {
                 list_item.appendChild(text);
                 achievement_list.appendChild(list_item);
                 achievement.displayed = true;
+                localStorage.setItem("achievements", JSON.stringify(achievements));
             };
 
             if (achievement.acquired === true && achievement.type == "earn" && achievement.paid == false) {
                 tax.style.display = "grid";
+                localStorage.setItem("achievements", JSON.stringify(achievements))
             }
         });
         return true;
     });
-
-    localStorage.setItem("clicks", clicks);
-    localStorage.setItem("moneyPerClick", moneyPerClick);
-    localStorage.setItem("moneyPerSecond", moneyPerSecond);
-    localStorage.setItem("upgrades", JSON.stringify(upgrades));
-    localStorage.setItem("achievements", JSON.stringify(achievements))
 
     window.requestAnimationFrame(step);
 };
@@ -204,6 +212,11 @@ window.addEventListener('load', (event) => {
     upgrades.forEach((upgrade) => {
         upgradeList.appendChild(createCard(upgrade));
     });
+
+    acquired_achievements.forEach((achievement) => {
+        achievement_list.appendChild(display_achievements(achievement));
+    })
+
     window.requestAnimationFrame(step);
 });
 
@@ -376,6 +389,19 @@ let achievements = JSON.parse(localStorage.getItem("achievements")) || [
     },
 ];
 
+function display_achievements(achievement) {
+    const list_item = document.createElement("div");
+    const text = document.createElement("p");
+
+    list_item.classList.add("unlockedAchievement");
+    text.textContent = `${achievement.name} - ${achievement.description}`;
+
+    list_item.appendChild(text);
+    localStorage.setItem("acquired_achievements", JSON.stringify(acquired_achievements));
+
+    return list_item
+}
+
 function createCard(upgrade) {
     const card = document.createElement('div');
     const upgradeCost = document.createElement("div");
@@ -417,6 +443,11 @@ function createCard(upgrade) {
 
             moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
             moneyPerClick += upgrade.clicks ? upgrade.clicks * multiplier : 0;
+
+            localStorage.setItem("moneyPerClick", moneyPerClick);
+            localStorage.setItem("moneyPerSecond", moneyPerSecond);
+            localStorage.setItem("upgrades", JSON.stringify(upgrades));
+            localStorage.setItem("clicks", clicks);
 
             message("You bought an upgrade", 'success');
 
@@ -512,12 +543,23 @@ pay.addEventListener("click", (event) => {
 
 reset_btn.addEventListener("click", (event) => {
     if (window.confirm("THIS ACTION IS IRREVERSIBLE! This will completely reset your progress and remove all your achievements, upgrades and your money. Are you sure you want to continue?")) {
-        window.cancelAnimationFrame(step)
         localStorage.removeItem("clicks");
         localStorage.removeItem("moneyPerClick");
         localStorage.removeItem("moneyPerSecond");
         localStorage.removeItem("upgrades");
-        localStorage.removeItem("achievements")
-        location.reload()
+        localStorage.removeItem("achievements");
+        localStorage.removeItem("acquired_achievements");
+        location.reload();
     }
 })
+
+function save_game() {
+    localStorage.setItem("clicks", clicks);
+    localStorage.setItem("moneyPerClick", moneyPerClick);
+    localStorage.setItem("moneyPerSecond", moneyPerSecond);
+    localStorage.setItem("achievements", JSON.stringify(achievements));
+    localStorage.setItem("upgrades", JSON.stringify(upgrades));
+    localStorage.setItem("acquired_achievements", JSON.stringify(acquired_achievements));
+}
+
+setInterval(save_game, 10000)
