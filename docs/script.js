@@ -30,6 +30,7 @@ const pay = document.querySelector("#pay");
 const gambling_card = document.querySelector("#gamblingCard")
 const charity_card = document.querySelector("#charityCard")
 const reset_btn = document.querySelector("#resetbtn")
+const overlay = document.querySelector("#overlay")
 
 coin.addEventListener("click", (event) => {
     clicks += moneyPerClick;
@@ -199,6 +200,7 @@ function step(timestamp) {
 
             if (achievement.acquired === true && achievement.type == "earn" && achievement.paid == false) {
                 tax.style.display = "grid";
+                overlay.style.display = "flex"
                 localStorage.setItem("achievements", JSON.stringify(achievements))
             }
         });
@@ -537,6 +539,7 @@ close_about.addEventListener("click", (event) => {
 pay.addEventListener("click", (event) => {
     clicks -= clicks * 0.1;
     tax.style.display = "none";
+    overlay.style.display = "none";
     message("Taxes paid!", "success");
     taxes_paid += 1;
 });
